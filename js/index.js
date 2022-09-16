@@ -1,31 +1,91 @@
-// Funcion para convertir Dolar crypto / Pesos
-function convertCrypto(option, value) {
-    if (option === 1) {
-        let buyCrypto = value / dolarCotizacion;
-        return buyCrypto.toFixed(2);
-    }
-    if (option === 2) {
-        let sellCrypto = value * dolarCotizacion;
-        return sellCrypto.toFixed(2);
+//Const definition
+const exrateBuyUSD = 278;
+const exrateSellUSD = 272;
+
+// Object definition
+class Crypto{
+    constructor(callname, name, exrate, stock) {
+        this.callname = callname;
+        this.name = name;
+        this.exrate = exrate;
+        this.stock = stock;
     }
 }
+
+// Function definition
+const ARSUSDT = (value, exrateUSD) => value * exrateUSD;
+const ARSADA = (value, exrateUSD) => (value * 0.45) * exrateUSD;
+const ARSETH = (value, exrateUSD) => (value * 1345) * exrateUSD;
+
+function convertCrypto(token, value, option) {
+    const searchCrypto = cryptos.find(crypto => crypto.callname == token);
+    console.log(`Token encontrado 
+    ${searchCrypto.callname}
+    ${searchCrypto.name}
+    ${searchCrypto.exrate}
+    ${searchCrypto.stock}`);
+    switch (option) {
+        case 1:
+            if (token === "USDT") {
+                convertion = ARSUSDT(value, exrateBuyUSD);
+                return convertion;
+            }
+            if (token === "ADA") {
+                convertion = ARSADA(value, exrateBuyUSD);
+                return convertion;
+            }
+            if (token === "ETH") {
+                convertion = ARSETH(value, exrateBuyUSD);
+                return convertion;
+            }
+            break;
+        case 2:
+            if (token === "USDT") {
+                convertion = ARSUSDT(value, exrateSellUSD);
+                return convertion;
+            }
+            if (token === "ADA") {
+                convertion = ARSADA(value, exrateSellUSD);
+                return convertion;
+            }
+            if (token === "ETH") {
+                convertion = ARSETH(value, exrateSellUSD);
+                return convertion;
+            }
+            break;
+    }
+}
+
+
 
 // Programa principal
-const dolarCotizacion = 269;
-let opcion = parseInt(prompt("Ingresar opcion 1.COMPRA - 2.VENDE dolares - 3.Salir"));
+const cryptos = [];
+cryptos.push(new Crypto("USDT", "USD Theter", 1, 1000));
+cryptos.push(new Crypto("ADA", "Cardano Token", 0.45, 2000));
+cryptos.push(new Crypto("ETH", "Etherum Token", 1345, 200));
 
-while (opcion != 3) {
-    if (opcion === 1) {
-        let cantidadDLS = parseFloat(prompt("Ingrese la cantidad a comprar en AR$"));
-        let result = convertCrypto(opcion, cantidadDLS);
-        alert(`Usted va a recibir ${result} dolares por sus pesos`);
-    } else if (opcion === 2) {
-        let cantidadDLS = parseFloat(prompt("Ingrese la cantidad a vender en US$"));
-        let result = convertCrypto(opcion, cantidadDLS);
-        alert(`usted va a recibir ${result} pesos por sus dolares`);
-    } else {
-        alert("ingreso una opcion incorrecta.");
-    };
-    opcion = parseInt(prompt("Ingresar opcion 1.COMPRA - 2.VENDE dolares - 3.Salir"));
+let option = parseInt(prompt("Ingresar opcion 1.COMPRA - 2.VENTA - 3.Salir"));
+
+while (option != 3) {
+    switch (option) {
+        case 1:
+            token = prompt("Ingrese el token que desea comprar - USDT,ADA,ETH");
+            value = prompt(`Ingrese cantidad de ${token} a comprar`);
+            convertion = convertCrypto(token, value, option);
+            alert(`La compra de ${token} $${value} equivalen a $${convertion}ARS`);
+            break;
+        case 2:
+            token = prompt("Ingrese el token que desea vender - USDT,ADA,ETH");
+            value = prompt(`Ingrese cantidad de ${token} a vender`);
+            convertion = convertCrypto(token, value, option);
+            alert(`La venta de ${token} $${value} equivalen a $${convertion}ARS`);
+            break;
+        default:
+            alert("ingreso una opcion incorrecta.");
+            break;
+    }
+    option = parseInt(prompt("Ingresar opcion 1.COMPRA - 2.VENTA - 3.Salir"));
 }
-alert("Cerrando App. Saludos!");
+
+console.log("Cerrando App. Saludos!");
+
