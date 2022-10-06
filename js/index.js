@@ -1,11 +1,12 @@
 -0//Const definition
 const exrateBuyUSD = 278;
 const exrateSellUSD = 272;
+let cartItems = [];
 
 // Object definition
 class Crypto{
-    constructor(callname, name, exrate, stock) {
-        this.callname = callname;
+    constructor(callsign, name, exrate, stock) {
+        this.callsign = callsign;
         this.name = name;
         this.exrate = exrate;
         this.stock = stock;
@@ -79,7 +80,8 @@ function updateCart(option, product, description, prodPrice) {
             price.innerText = `AR$ ${prodPrice}`;
             document.getElementById("items-cart").innerText = 1;
             document.getElementById("total").innerText = total + prodPrice;
-
+            cartItems.push({ product, description, prodPrice });
+            sessionStorage.setItem("cart", JSON.stringify(cartItems));
             break;
         case 1:
             prod = document.getElementById("item-1-product");
@@ -90,6 +92,8 @@ function updateCart(option, product, description, prodPrice) {
             price.innerText = `AR$ ${prodPrice}`;
             document.getElementById("items-cart").innerText = 2;
             document.getElementById("total").innerText = total + prodPrice;
+            cartItems.push({ product, description, prodPrice });
+            sessionStorage.setItem("cart", JSON.stringify(cartItems));
             break;
         case 2:
             prod = document.getElementById("item-2-product");
@@ -100,6 +104,8 @@ function updateCart(option, product, description, prodPrice) {
             price.innerText = `AR$ ${prodPrice}`;
             document.getElementById("items-cart").innerText = 3;
             document.getElementById("total").innerText = total + prodPrice;
+            cartItems.push({ product, description, prodPrice });
+            sessionStorage.setItem("cart", JSON.stringify(cartItems));
             break;
         default:
             alert(`Solo se permiten 3 transacciones por sesion`);
@@ -120,9 +126,11 @@ function resetCrypto() {
 
 // Programa principal
 const cryptos = [];
+localStorage.clear();
 cryptos.push(new Crypto("USDT", "USD Theter", 1, 1000));
 cryptos.push(new Crypto("ADA", "Cardano Token", 0.45, 2000));
 cryptos.push(new Crypto("ETH", "Etherum Token", 1345, 200));
+localStorage.setItem("cryptos", JSON.stringify(cryptos));
 
 
 const formCrypto = document.getElementById("form1");
@@ -148,44 +156,5 @@ formCrypto.addEventListener("submit", (e) => {
     
 });
 
-// updateCart("buy", "compra USDT", "compra USDT", 25);
 
-
-
-// let option = parseInt(prompt("Ingresar opcion 1.COMPRA - 2.VENTA - 3.Salir"));
-
-
-
-
-
-// while (option != 3) {
-//     switch (option) {
-//         case 1:
-//             token = prompt("Ingrese el token que desea comprar - USDT,ADA,ETH");
-//             value = prompt(`Ingrese cantidad de ${token} a comprar`);
-//             convertion = convertCrypto(token, value, option);
-//             alert(`La compra de ${token} $${value} equivalen a $${convertion}ARS`);
-//             product = `Compra ${token}`;
-//             description = `Exchange rate: $${exrateBuyUSD}`;
-//             updateCart(option, product, description, convertion);
-//             break;
-//         case 2:
-//             token = prompt("Ingrese el token que desea vender - USDT,ADA,ETH");
-//             value = prompt(`Ingrese cantidad de ${token} a vender`);
-//             convertion = convertCrypto(token, value, option);
-//             alert(`La venta de ${token} $${value} equivalen a $${convertion}ARS`);
-//             product = `Venta ${token}`;
-//             description = `Exchange rate: $${exrateBuyUSD}`;
-//             updateCart(option, product, description, convertion);
-//             break;
-//         default:
-//             alert("ingreso una opcion incorrecta.");
-//             break;
-//     }
-//     option = parseInt(prompt("Ingresar opcion 1.COMPRA - 2.VENTA - 3.Salir"));
-// }
-
-
-
-// console.log("Cerrando App. Saludos!");
 
