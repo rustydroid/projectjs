@@ -22,9 +22,9 @@ const ARSETH = (value, exrateUSD) => (value * 1345) * exrateUSD;
 
 
 function convertCrypto(token, value, option) {
-    const searchCrypto = cryptos.find(crypto => crypto.callname == token);
+    const searchCrypto = cryptos.find(crypto => crypto.callsign == token);
     console.log(`Token encontrado 
-    ${searchCrypto.callname}
+    ${searchCrypto.callsign}
     ${searchCrypto.name}
     ${searchCrypto.exrate}
     ${searchCrypto.stock}`);
