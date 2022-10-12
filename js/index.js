@@ -45,6 +45,10 @@ function convertCrypto(token, value, option) {
                 convertion = ARSETH(value, exrateBuyUSD);
                 return convertion;
             }
+            if (token === "ARS") {
+                convertion = ARSUSDT(value, exrateBuyUSD);
+                return convertion;
+            }
             break;
         case "sell":
             if (token === "USD") {
@@ -60,6 +64,10 @@ function convertCrypto(token, value, option) {
             }
             if (token === "ETH") {
                 convertion = ARSETH(value, exrateSellUSD);
+                return convertion;
+            }
+            if (token === "ARS") {
+                convertion = ARSUSDT(value, exrateSellUSD);
                 return convertion;
             }
             break;
@@ -124,12 +132,32 @@ function resetCrypto() {
     action.selectedIndex = 0;
 }
 
+function setOption(readAction) {
+    let origin = document.getElementById("cryptoOrigin").value;
+    let target = document.getElementById("cryptoTarget").value;
+    let value = parseInt(document.getElementById("amount").value);
+    convertion = convertCrypto(target, value, readAction);
+    if (readAction === "buy") {
+        product = `Compra ${origin} ${target}`;
+        description = `Exchange rate: $${exrateBuyUSD}`;
+        updateCart(readAction, product, description, convertion);
+    } else if (readAction === "sell") {
+        product = `Venta ${origin} ${target}`;
+        description = `Exchange rate: $${exrateBuyUSD}`;
+        console.log()
+        updateCart(readAction, product, description, convertion);
+    }
+}
+
+
 // Main Program
 const cryptos = [];
 localStorage.clear();
 cryptos.push(new Crypto("USDT", "USD Theter", 1, 1000));
 cryptos.push(new Crypto("ADA", "Cardano Token", 0.45, 2000));
 cryptos.push(new Crypto("ETH", "Etherum Token", 1345, 200));
+cryptos.push(new Crypto("ARS", "Peso Argentino", 0.0066, 20000));
+
 localStorage.setItem("cryptos", JSON.stringify(cryptos));
 
 
@@ -150,21 +178,8 @@ cartAdd.addEventListener("click", (e) => {
     let cartList = document.getElementById("cartList");
     paymentForm.classList.remove("hidden");
     cartList.classList.remove("hidden");
-    let origin = document.getElementById("cryptoOrigin").value;
-    let target = document.getElementById("cryptoTarget").value;
-    let value = parseInt(document.getElementById("amount").value);
     let action = document.getElementById("actionReq").value;
-    convertion = convertCrypto(target, value, action);
-    if (action === "buy") {
-        product = `Compra ${target}`;
-        description = `Exchange rate: $${exrateBuyUSD}`;
-        updateCart(action, product, description, convertion);
-    } else if (action === "sell") {
-        product = `Venta ${target}`;
-        description = `Exchange rate: $${exrateBuyUSD}`;
-        console.log()
-        updateCart(action, product, description, convertion);
-    }
+    action === "buy" ? setOption("buy") : setOption("sell");
     resetCrypto();
 })
 
