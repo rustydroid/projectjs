@@ -36,7 +36,7 @@
           <span class="text-primary">Carrito/Your cart</span>
           <span class="badge bg-primary rounded-pill" id="items-cart">0</span>
         </h4>
-        <ul class="list-group mb-3">
+        <ul class="list-group mb-3 hidden fade-in" id="cartList">
           <li class="list-group-item d-flex justify-content-between lh-sm items" id="item-1">
             <div>
               <h6 class="my-0" id="item-0-product"></h6>
@@ -82,132 +82,106 @@
         <h4 class="mb-3">Conozca a su Cliente</h4>
         <form class="needs-validation" id="form1" novalidate>
           <div class="row g-3">
-            <div class="col-sm-6">
-              <label for="firstName" class="form-label">Nombre/First Name</label>
-              <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
-              <div class="invalid-feedback">
-                Nombre valido es mandatorio.
-              </div>
-            </div>
-
-            <div class="col-sm-6">
-              <label for="lastName" class="form-label">Apellido/Last Name</label>
-              <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
-              <div class="invalid-feedback">
-                Apellido es mandatorio.
-              </div>
-            </div>
-
-            <div class="col-12">
-              <label for="username" class="form-label">Username</label>
-              <div class="input-group has-validation">
-                <span class="input-group-text">@</span>
-                <input type="text" class="form-control" id="username" placeholder="Username" required>
-              <div class="invalid-feedback">
-                  El username es mandatorio
+            <article class="row g-3" id="credentialSection">
+              <div class="col-sm-6">
+                <label for="firstName" class="form-label">Nombre/First Name</label>
+                <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                <div class="invalid-feedback">
+                  Nombre valido es mandatorio.
                 </div>
               </div>
-            </div>
 
-            <div class="col-12">
-              <label for="email" class="form-label">Email <span class="text-muted">(Optional)</span></label>
-              <input type="email" class="form-control" id="email" placeholder="you@example.com">
-              <div class="invalid-feedback">
-                Ingrese su email para enviar correo de confirmacion.
+              <div class="col-sm-6">
+                <label for="lastName" class="form-label">Apellido/Last Name</label>
+                <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+                <div class="invalid-feedback">
+                  Apellido es mandatorio.
+                </div>
               </div>
-            </div>
 
-            <div class="col-md-5">
-              <label for="country" class="form-label">Pais/Country</label>
-              <select class="form-select" id="country" required>
-                <option value="">Choose...</option>
-                <option value="argentina">Argentina</option>
-                <option value="usa">Estados Unidos</option>
-              </select>
-              <div class="invalid-feedback">
-                Seleccione un pais
+              <div class="col-6">
+                <label for="username" class="form-label">Username</label>
+                <div class="input-group has-validation">
+                  <span class="input-group-text">@</span>
+                  <input type="text" class="form-control" id="username" placeholder="Username" required>
+                <div class="invalid-feedback">
+                    El username es mandatorio
+                  </div>
+                </div>
               </div>
-            </div>
+              <div class="col-6">
+                <label for="email" class="form-label">Email <span class="text-muted">(Optional)</span></label>
+                <input type="email" class="form-control" id="email" placeholder="you@example.com">
+                <div class="invalid-feedback">
+                  Ingrese su email para enviar correo de confirmacion.
+                </div>
+              </div>
+              <div class="col-lg-12 mt-4 ">
+                <button class="w-100 btn btn-primary btn-lg" id="validate" type="submit">Validar/Validate</button>
+              </div>
+            </article>
+            
+            <article class="row g-3 hidden" id="cryptoSection">
+              <h4 class="mb-3">Crypto</h4>
+              <p>Solo 3 transacciones por sesion. - Only 3 transactions per session.</p>
 
-            <div class="col-md-4">
-              <label for="state" class="form-label">Provincia/State</label>
-              <select class="form-select" id="state" required>
-                <option value="">Choose...</option>
-                <option>Buenos Aires</option>
-                <option>California</option>
-              </select>
-              <div class="invalid-feedback">
-                Seleccione un estado/provincia
+              <div class="col-md-6">
+                <label for="country" class="form-label">Origen/Origin</label>
+                <select class="form-select" id="cryptoOrigin" required>
+                  <option value="">Choose...</option>
+                  <option value="ARS">ARS</option>
+                  <!-- <option value="USD">USD</option> -->
+                  <option value="USDT">USDT</option>
+                  <option value="ADA">ADA</option>
+                  <option value="ETH">ETH</option>
+                </select>
+                <div class="invalid-feedback">
+                  Select an Origin coin
+                </div>
               </div>
-            </div>
 
-            <div class="col-md-3">
-              <label for="zip" class="form-label">Codigo Postal/ZIP</label>
-              <input type="text" class="form-control" id="zip" placeholder="" required>
-              <div class="invalid-feedback">
-                Zip code required.
+              <div class="col-md-6">
+                <label for="state" class="form-label">Destino/Destination</label>
+                <select class="form-select" id="cryptoTarget" required>
+                  <option value="">Choose...</option>
+                  <option value="ARS">ARS</option>
+                  <!-- <option value="USD">USD</option> -->
+                  <option value="USDT">USDT</option>
+                  <option value="ADA">ADA</option>
+                  <option value="ETH">ETH</option>
+                </select>
+                <div class="invalid-feedback">
+                  Select a Target coin
+                </div>
               </div>
-            </div>
-            <hr class="my-4">
-            <h4 class="mb-3">Crypto</h4>
-            <p>Solo 3 transacciones por sesion. - Only 3 transactions per session.</p>
-
-            <div class="col-md-6">
-              <label for="country" class="form-label">Origen/Origin</label>
-              <select class="form-select" id="cryptoOrigin" required>
-                <option value="">Choose...</option>
-                <option value="ARS">ARS</option>
-                <!-- <option value="USD">USD</option> -->
-                <option value="USDT">USDT</option>
-                <option value="ADA">ADA</option>
-                <option value="ETH">ETH</option>
-              </select>
-              <div class="invalid-feedback">
-                Select an Origin coin
+              <div class="col-md-6">
+                <label for="firstName" class="form-label">Cantidad/Amount</label>
+                <input type="text" class="form-control" id="amount" placeholder="" value="" required>
+                <div class="invalid-feedback">
+                  Value different from 0.
+                </div>
               </div>
-            </div>
-
-            <div class="col-md-6">
-              <label for="state" class="form-label">Destino/Destination</label>
-              <select class="form-select" id="cryptoTarget" required>
-                <option value="">Choose...</option>
-                <option value="ARS">ARS</option>
-                <!-- <option value="USD">USD</option> -->
-                <option value="USDT">USDT</option>
-                <option value="ADA">ADA</option>
-                <option value="ETH">ETH</option>
-              </select>
-              <div class="invalid-feedback">
-                Select a Target coin
+              <div class="col-md-6">
+                <label for="state" class="form-label">Accion/Action</label>
+                <select class="form-select" id="actionReq" required>
+                  <option value="">Choose...</option>
+                  <option value="buy">Compra/Buy</option>
+                  <option value="sell">Venta/Sell</option>
+                </select>
+                <div class="invalid-feedback">
+                  Select Action
+                </div>
               </div>
-            </div>
-            <div class="col-md-6">
-              <label for="firstName" class="form-label">Cantidad/Amount</label>
-              <input type="text" class="form-control" id="amount" placeholder="" value="" required>
-              <div class="invalid-feedback">
-                Value different from 0.
+              <div class="col-lg-12 mt-4 ">
+                <button class="w-100 btn btn-primary btn-lg" id="cartAdd" type="submit">Agregar/Add</button>
               </div>
-            </div>
-            <div class="col-md-6">
-              <label for="state" class="form-label">Accion/Action</label>
-              <select class="form-select" id="actionReq" required>
-                <option value="">Choose...</option>
-                <option value="buy">Compra/Buy</option>
-                <option value="sell">Venta/Sell</option>
-              </select>
-              <div class="invalid-feedback">
-                Select Action
-              </div>
-            </div>
-            <div class="col-lg-12 mt-4 ">
-              <button class="w-100 btn btn-primary btn-lg" type="submit">Agregar/Add</button>
-            </div>
+            </article>
           </div>
         </form>
 
         <hr class="my-4">
 
-        <form class="needs-validation" id="form2" novalidate>
+        <form class="needs-validation hidden" id="form2" novalidate>
           <h4 class="mb-3">Forma de pago/Payment</h4>
           <div class="my-3">
             <div class="form-check">
@@ -232,16 +206,7 @@
               <div class="invalid-feedback">
                 Name on card is required
               </div>
-            </div>          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="compra-buy">
-            <label class="form-check-label" for="compra-buy">Compra/Buy</label>
-          </div>
-
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="venta-sell">
-            <label class="form-check-label" for="venta-sell">Venta/Sell</label>
-          </div>
-
+            </div> 
             <div class="col-md-6">
               <label for="cc-number" class="form-label">Credit card number</label>
               <input type="text" class="form-control" id="cc-number" placeholder="" required>
