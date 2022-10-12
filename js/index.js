@@ -45,10 +45,6 @@ function convertCrypto(token, value, option) {
                 convertion = ARSETH(value, exrateBuyUSD);
                 return convertion;
             }
-            if (token === "ARS") {
-                convertion = ARSETH(value, exrateBuyUSD);
-                return convertion;
-            }
             break;
         case "sell":
             if (token === "USD") {
@@ -64,10 +60,6 @@ function convertCrypto(token, value, option) {
             }
             if (token === "ETH") {
                 convertion = ARSETH(value, exrateSellUSD);
-                return convertion;
-            }
-            if (token === "ARS") {
-                convertion = ARSUSDT(value, exrateSellUSD);
                 return convertion;
             }
             break;
