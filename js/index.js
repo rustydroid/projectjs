@@ -20,6 +20,30 @@ const ARSUSDT = (value, exrateUSD) => value * exrateUSD;
 const ARSADA = (value, exrateUSD) => (value * 0.45) * exrateUSD;
 const ARSETH = (value, exrateUSD) => (value * 1345) * exrateUSD;
 
+function connBlockchain() {
+    let timerInterval
+    Swal.fire({
+        title: 'Connectando a la blockchain!',
+        html: 'Espere <b></b> milisegundos.',
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading()
+            const b = Swal.getHtmlContainer().querySelector('b')
+            timerInterval = setInterval(() => {
+                b.textContent = Swal.getTimerLeft()
+            }, 100)
+        },
+        willClose: () => {
+            clearInterval(timerInterval)
+        }
+    }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+            console.log('I was closed by the timer')
+        }
+    });
+}
 
 function convertCrypto(token, value, option) {
     const searchCrypto = cryptos.find(crypto => crypto.callsign == token);
@@ -39,6 +63,7 @@ function convertCrypto(token, value, option) {
             }
             if (token === "ADA") {
                 convertion = ARSADA(value, exrateBuyUSD);
+                console.log(convertion);
                 return convertion;
             }
             if (token === "ETH") {
@@ -74,22 +99,53 @@ function convertCrypto(token, value, option) {
     }
 }
 
+// function addCartItem(prod, desc, price) {
+//     let bullet = parseInt((document.getElementById("items-cart").innerText));
+//     let total = parseInt(document.getElementById("total").innerText);
+//     console.l
+//     prod = document.getElementById(prod);
+//     desc = document.getElementById(desc);
+//     price = document.getElementById(price);
+//     prod.innerText = product;
+//     desc.innerText = description;
+//     price.innerText = `AR$ ${prodPrice}`;
+//     document.getElementById("items-cart").innerText = bullet + 1;
+//     document.getElementById("total").innerText = total + prodPrice;
+//     cartItems.push({ product, description, prodPrice });
+//     sessionStorage.setItem("cart", JSON.stringify(cartItems));
+//     Swal.fire({
+//         position: 'center-center',
+//         icon: 'success',
+//         title: 'Transaccion agregada al carrito',
+//         showConfirmButton: false,
+//         timer: 1500
+//     });
+// }
+
 function updateCart(option, product, description, prodPrice) {
     let bullet = parseInt((document.getElementById("items-cart").innerText));
     let total = parseInt(document.getElementById("total").innerText);
     console.log(bullet);
     switch (bullet) {
         case 0:
+            // addCartItem("item-0-product","item-0-desc","item-0-price")
             prod = document.getElementById("item-0-product");
             desc = document.getElementById("item-0-desc");
             price = document.getElementById("item-0-price");
             prod.innerText = product;
             desc.innerText = description;
             price.innerText = `AR$ ${prodPrice}`;
-            document.getElementById("items-cart").innerText = 1;
+            document.getElementById("items-cart").innerText = bullet +1;
             document.getElementById("total").innerText = total + prodPrice;
             cartItems.push({ product, description, prodPrice });
             sessionStorage.setItem("cart", JSON.stringify(cartItems));
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Transaccion agregada al carrito',
+                showConfirmButton: false,
+                timer: 1500
+            });
             break;
         case 1:
             prod = document.getElementById("item-1-product");
@@ -98,10 +154,17 @@ function updateCart(option, product, description, prodPrice) {
             prod.innerText = product;
             desc.innerText = description;
             price.innerText = `AR$ ${prodPrice}`;
-            document.getElementById("items-cart").innerText = 2;
+            document.getElementById("items-cart").innerText = bullet +1;
             document.getElementById("total").innerText = total + prodPrice;
             cartItems.push({ product, description, prodPrice });
             sessionStorage.setItem("cart", JSON.stringify(cartItems));
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Transaccion agregada al carrito',
+                showConfirmButton: false,
+                timer: 1500
+            });
             break;
         case 2:
             prod = document.getElementById("item-2-product");
@@ -110,13 +173,27 @@ function updateCart(option, product, description, prodPrice) {
             prod.innerText = product;
             desc.innerText = description;
             price.innerText = `AR$ ${prodPrice}`;
-            document.getElementById("items-cart").innerText = 3;
+            document.getElementById("items-cart").innerText = bullet + 1;
             document.getElementById("total").innerText = total + prodPrice;
             cartItems.push({ product, description, prodPrice });
             sessionStorage.setItem("cart", JSON.stringify(cartItems));
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Transaccion agregada al carrito',
+                showConfirmButton: false,
+                timer: 1500
+            });
             break;
         default:
-            alert(`Solo se permiten 3 transacciones por sesion`);
+            // alert(`Solo se permiten 3 transacciones por sesion`);
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Solo se permiten 3 transacciones por sesion',
+                showConfirmButton: false,
+                timer: 1500
+            });
     }
     
 }
@@ -141,6 +218,7 @@ function setOption(readAction) {
         product = `Compra ${origin} ${target}`;
         description = `Exchange rate: $${exrateBuyUSD}`;
         updateCart(readAction, product, description, convertion);
+
     } else if (readAction === "sell") {
         product = `Venta ${origin} ${target}`;
         description = `Exchange rate: $${exrateBuyUSD}`;
@@ -168,9 +246,11 @@ credentialValidate.addEventListener("click", (e) => {
     e.preventDefault();
     let credentialSection = document.getElementById("credentialSection");
     let cryptoSection = document.getElementById("cryptoSection")
+    let titlePage = document.getElementById("titlePage");
+    connBlockchain();
     credentialSection.classList.add("hidden");
     cryptoSection.classList.remove("hidden");
-    
+    titlePage.classList.add("hidden");
 });
 
 cartAdd.addEventListener("click", (e) => {
