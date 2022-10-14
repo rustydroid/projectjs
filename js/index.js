@@ -122,16 +122,25 @@ function convertCrypto(token, value, option) {
 //     });
 // }
 
+
+
+
+
 function updateCart(option, product, description, prodPrice) {
     let bullet = parseInt((document.getElementById("items-cart").innerText));
     let total = parseInt(document.getElementById("total").innerText);
+    let item1 = `item-${bullet}-product`;
+    let item2 = `item-${bullet}-desc`;
+    let item3 = `item-${bullet}-price`;
     console.log(bullet);
+
+
     switch (bullet) {
         case 0:
             // addCartItem("item-0-product","item-0-desc","item-0-price")
-            prod = document.getElementById("item-0-product");
-            desc = document.getElementById("item-0-desc");
-            price = document.getElementById("item-0-price");
+            prod = document.getElementById(item1);
+            desc = document.getElementById(item2);
+            price = document.getElementById(item3);
             prod.innerText = product;
             desc.innerText = description;
             price.innerText = `AR$ ${prodPrice}`;
@@ -148,9 +157,9 @@ function updateCart(option, product, description, prodPrice) {
             });
             break;
         case 1:
-            prod = document.getElementById("item-1-product");
-            desc = document.getElementById("item-1-desc");
-            price = document.getElementById("item-1-price");
+            prod = document.getElementById(item1);
+            desc = document.getElementById(item2);
+            price = document.getElementById(item3);
             prod.innerText = product;
             desc.innerText = description;
             price.innerText = `AR$ ${prodPrice}`;
@@ -167,9 +176,9 @@ function updateCart(option, product, description, prodPrice) {
             });
             break;
         case 2:
-            prod = document.getElementById("item-2-product");
-            desc = document.getElementById("item-2-desc");
-            price = document.getElementById("item-2-price");
+            prod = document.getElementById(item1);
+            desc = document.getElementById(item2);
+            price = document.getElementById(item3);
             prod.innerText = product;
             desc.innerText = description;
             price.innerText = `AR$ ${prodPrice}`;
