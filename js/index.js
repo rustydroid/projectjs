@@ -99,45 +99,13 @@ function convertCrypto(token, value, option) {
     }
 }
 
-// function addCartItem(prod, desc, price) {
-//     let bullet = parseInt((document.getElementById("items-cart").innerText));
-//     let total = parseInt(document.getElementById("total").innerText);
-//     console.l
-//     prod = document.getElementById(prod);
-//     desc = document.getElementById(desc);
-//     price = document.getElementById(price);
-//     prod.innerText = product;
-//     desc.innerText = description;
-//     price.innerText = `AR$ ${prodPrice}`;
-//     document.getElementById("items-cart").innerText = bullet + 1;
-//     document.getElementById("total").innerText = total + prodPrice;
-//     cartItems.push({ product, description, prodPrice });
-//     sessionStorage.setItem("cart", JSON.stringify(cartItems));
-//     Swal.fire({
-//         position: 'center-center',
-//         icon: 'success',
-//         title: 'Transaccion agregada al carrito',
-//         showConfirmButton: false,
-//         timer: 1500
-//     });
-// }
-
-
-
-
-
 function updateCart(option, product, description, prodPrice) {
     let bullet = parseInt((document.getElementById("items-cart").innerText));
     let total = parseInt(document.getElementById("total").innerText);
     let item1 = `item-${bullet}-product`;
     let item2 = `item-${bullet}-desc`;
     let item3 = `item-${bullet}-price`;
-    console.log(bullet);
-
-
-    switch (bullet) {
-        case 0:
-            // addCartItem("item-0-product","item-0-desc","item-0-price")
+    if (bullet < 3) {
             prod = document.getElementById(item1);
             desc = document.getElementById(item2);
             price = document.getElementById(item3);
@@ -155,54 +123,14 @@ function updateCart(option, product, description, prodPrice) {
                 showConfirmButton: false,
                 timer: 1500
             });
-            break;
-        case 1:
-            prod = document.getElementById(item1);
-            desc = document.getElementById(item2);
-            price = document.getElementById(item3);
-            prod.innerText = product;
-            desc.innerText = description;
-            price.innerText = `AR$ ${prodPrice}`;
-            document.getElementById("items-cart").innerText = bullet +1;
-            document.getElementById("total").innerText = total + prodPrice;
-            cartItems.push({ product, description, prodPrice });
-            sessionStorage.setItem("cart", JSON.stringify(cartItems));
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Transaccion agregada al carrito',
-                showConfirmButton: false,
-                timer: 1500
-            });
-            break;
-        case 2:
-            prod = document.getElementById(item1);
-            desc = document.getElementById(item2);
-            price = document.getElementById(item3);
-            prod.innerText = product;
-            desc.innerText = description;
-            price.innerText = `AR$ ${prodPrice}`;
-            document.getElementById("items-cart").innerText = bullet + 1;
-            document.getElementById("total").innerText = total + prodPrice;
-            cartItems.push({ product, description, prodPrice });
-            sessionStorage.setItem("cart", JSON.stringify(cartItems));
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Transaccion agregada al carrito',
-                showConfirmButton: false,
-                timer: 1500
-            });
-            break;
-        default:
-            // alert(`Solo se permiten 3 transacciones por sesion`);
-            Swal.fire({
-                position: 'center',
-                icon: 'error',
-                title: 'Solo se permiten 3 transacciones por sesion',
-                showConfirmButton: false,
-                timer: 1500
-            });
+    }else {
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Solo se permiten 3 transacciones por sesion',
+            showConfirmButton: false,
+            timer: 1500
+        });
     }
     
 }
@@ -256,21 +184,65 @@ credentialValidate.addEventListener("click", (e) => {
     let credentialSection = document.getElementById("credentialSection");
     let cryptoSection = document.getElementById("cryptoSection")
     let titlePage = document.getElementById("titlePage");
+    let connector = document.getElementById("connector");
     connBlockchain();
     credentialSection.classList.add("hidden");
     cryptoSection.classList.remove("hidden");
     titlePage.classList.add("hidden");
+    connector.classList.remove("svg-image-red");
+    connector.classList.add("svg-image-green");
 });
 
 cartAdd.addEventListener("click", (e) => {
+    let cart = document.getElementById("cart");
     let paymentForm = document.getElementById("form2");
     let cartList = document.getElementById("cartList");
+    cart.classList.remove("hidden");
     paymentForm.classList.remove("hidden");
     cartList.classList.remove("hidden");
     let action = document.getElementById("actionReq").value;
     action === "buy" ? setOption("buy") : setOption("sell");
     resetCrypto();
 })
+
+const buttonOpenTable = document.getElementById('openCryptoTable');
+buttonOpenTable.addEventListener("click", (e) => {
+  e.preventDefault();
+  fetch("./resources/crypto.json")
+    .then((response) => {
+      if (response.ok) {
+        response.json().then((json) => {
+          // console.log(json.data);
+          let coinsData = json.data.coins;
+
+          if (coinsData.length > 0) {
+            var cryptoCoin = "";
+          }
+          let counter = 0;
+          //For Loop Starts
+          // subscribeBinance();
+          for (const coin of coinsData) {
+            if (counter >= 10) {
+              break;
+            }
+            cryptoCoin += "<tr>";
+            cryptoCoin += `<td> ${coin.price} </td>`;
+            cryptoCoin += `<td> ${coin.rank}</td>`;
+            cryptoCoin += `<td> ${coin.name}</td>`;
+            // cryptoCoin += `<td> $${Math.round(coin.price)} Billion</td>`;
+            cryptoCoin += `<td> ${coin.symbol}</td>`; "<tr>";
+            counter++;
+          };
+
+          //For Loop Ends
+          document.getElementById("data").innerHTML = cryptoCoin;
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
 
 
 

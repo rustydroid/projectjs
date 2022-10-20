@@ -25,13 +25,53 @@
 <div class="container">
   <main>
     <div class="py-5 text-center">
-      <img class="d-block mx-auto mb-4" src="resources/cryptocurrency.svg" alt="" width="200">
+      <img class="d-block mx-auto mb-4 image-color" src="resources/cryptocurrency.svg" alt="" width="200">
       <h2>Crypto Trader</h2>
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-currency-bitcoin svg-image-red" id="connector" viewBox="0 0 16 16">
+        <path d="M5.5 13v1.25c0 .138.112.25.25.25h1a.25.25 0 0 0 .25-.25V13h.5v1.25c0 .138.112.25.25.25h1a.25.25 0 0 0 .25-.25V13h.084c1.992 0 3.416-1.033 3.416-2.82 0-1.502-1.007-2.323-2.186-2.44v-.088c.97-.242 1.683-.974 1.683-2.19C11.997 3.93 10.847 3 9.092 3H9V1.75a.25.25 0 0 0-.25-.25h-1a.25.25 0 0 0-.25.25V3h-.573V1.75a.25.25 0 0 0-.25-.25H5.75a.25.25 0 0 0-.25.25V3l-1.998.011a.25.25 0 0 0-.25.25v.989c0 .137.11.25.248.25l.755-.005a.75.75 0 0 1 .745.75v5.505a.75.75 0 0 1-.75.75l-.748.011a.25.25 0 0 0-.25.25v1c0 .138.112.25.25.25L5.5 13zm1.427-8.513h1.719c.906 0 1.438.498 1.438 1.312 0 .871-.575 1.362-1.877 1.362h-1.28V4.487zm0 4.051h1.84c1.137 0 1.756.58 1.756 1.524 0 .953-.626 1.45-2.158 1.45H6.927V8.539z"/>
+      </svg>
       <p class="lead">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id, aspernatur vero! Maiores et expedita facilis eaque rem, quis quae tempora fuga inventore fugiat voluptate quaerat facere consequuntur saepe deserunt dicta?</p>
+      <div class="container row-col-1 text-center">
+        <!-- Modal Section -->
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="openCryptoTable">
+          Cotizacion Crypto(offline)
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Crypto Table</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <table class="table table-bordered table__margin">
+                  <thead>
+                    <tr>
+                      <th scope="col">Price</th>
+                      <th scope="col">Rank</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Symbol</th>
+                    </tr>
+                  </thead>
+                  <tbody id="data">
+              
+                  </tbody>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeCryptoTable">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="row g-5">
-      <div class="col-md-5 col-lg-4 order-md-last carrito" id="cart">
+      <div class="col-md-5 col-lg-4 order-md-last carrito hidden" id="cart">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-primary">Carrito/Your cart</span>
           <span class="badge bg-primary rounded-pill" id="items-cart">0</span>
