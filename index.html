@@ -35,7 +35,7 @@
         <!-- Modal Section -->
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="openCryptoTable">
-          Cotizacion Crypto(offline)
+          Cotizacion Crypto(online)
         </button>
 
         <!-- Modal -->
@@ -50,16 +50,19 @@
                 <table class="table table-bordered table__margin">
                   <thead>
                     <tr>
-                      <th scope="col">Price</th>
                       <th scope="col">Rank</th>
                       <th scope="col">Name</th>
                       <th scope="col">Symbol</th>
+                      <th scope="col">Price</th>
                     </tr>
                   </thead>
                   <tbody id="data">
               
                   </tbody>
                 </table>
+              </div>
+              <div>
+                <p>Powered by <img class="binance_image" src="./resources/binance_logo.png"></p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeCryptoTable">Close</button>
@@ -71,30 +74,33 @@
     </div>
 
     <div class="row g-5">
-      <div class="col-md-5 col-lg-4 order-md-last carrito hidden" id="cart">
-        <h4 class="d-flex justify-content-between align-items-center mb-3">
+      <div class="col-md-5 col-lg-4 order-md-last carrito">
+        <h4 class="d-flex justify-content-between align-items-center mb-3 hidden" id="cart">
           <span class="text-primary">Carrito/Your cart</span>
           <span class="badge bg-primary rounded-pill" id="items-cart">0</span>
         </h4>
         <ul class="list-group mb-3 hidden fade-in" id="cartList">
-          <li class="list-group-item d-flex justify-content-between lh-sm items" id="item-1">
-            <div>
+          <li class="list-group-item d-flex justify-content-between lh-sm items">
+            <div class="container-fluid" id="item-0">
               <h6 class="my-0" id="item-0-product"></h6>
               <small class="text-muted" id="item-0-desc"></small>
+              <button type="button" class="btn btn-danger hidden" id="item-0-delete">X</button>
             </div>
             <span class="text-muted" id="item-0-price"></span>
           </li>
-          <li class="list-group-item d-flex justify-content-between lh-sm items" id="item2">
-            <div>
+          <li class="list-group-item d-flex justify-content-between lh-sm items">
+            <div class="container-fluid">
               <h6 class="my-0" id="item-1-product"></h6>
               <small class="text-muted" id="item-1-desc"></small>
+              <button type="button" class="btn btn-danger hidden" id="item-1-delete">X</button>
             </div>
             <span class="text-muted" id="item-1-price"></span>
           </li>
           <li class="list-group-item d-flex justify-content-between lh-sm items">
-            <div>
+            <div class="container-fluid">
               <h6 class="my-0" id="item-2-product"></h6>
               <small class="text-muted" id="item-2-desc"></small>
+              <button type="button" class="btn btn-danger hidden" id="item-2-delete">X</button>
             </div>
             <span class="text-muted" id="item-2-price"></span>
           </li>
@@ -222,17 +228,17 @@
         <form class="needs-validation hidden" id="form2" novalidate>
           <h4 class="mb-3">Forma de pago/Payment</h4>
           <div class="my-3">
-            <div class="form-check">
+            <div class="form-check hidden">
               <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked required>
               <label class="form-check-label" for="credit">Credit card</label>
             </div>
-            <div class="form-check">
+            <div class="form-check hidden">
               <input id="debit" name="paymentMethod" type="radio" class="form-check-input" required>
               <label class="form-check-label" for="debit">Debit card</label>
             </div>
             <div class="form-check">
               <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required>
-              <label class="form-check-label" for="paypal">PayPal</label>
+              <label class="form-check-label" for="paypal">MercadoPago</label>
             </div>
           </div>
 
@@ -280,6 +286,7 @@
 
   <footer class="my-5 pt-5 text-muted text-center text-small">
     <p class="mb-1">&copy; 2022 JSCryptoMarket</p>
+
     <ul class="list-inline">
       <li class="list-inline-item"><a href="#">Privacy</a></li>
       <li class="list-inline-item"><a href="#">Terms</a></li>

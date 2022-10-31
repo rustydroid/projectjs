@@ -45,6 +45,33 @@ function connBlockchain() {
     });
 }
 
+function connMercadoPago() {
+    let timerInterval
+    Swal.fire({
+    title: 'Connectando a la MercadoPago!',
+    imageUrl: './resources/mercado-pago-logo-vector.svg',
+    imageWidth: 400,
+    html: 'Esperando al Servidor MP <b></b> milisegundos.',
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: () => {
+        Swal.showLoading()
+        const b = Swal.getHtmlContainer().querySelector('b')
+        timerInterval = setInterval(() => {
+        b.textContent = Swal.getTimerLeft()
+        }, 100)
+    },
+    willClose: () => {
+        clearInterval(timerInterval)
+    }
+    }).then((result) => {
+    /* Read more about handling dismissals below */
+    if (result.dismiss === Swal.DismissReason.timer) {
+        console.log('Conexion Terminada...')
+    }
+    })
+}
+
 function convertCrypto(token, value, option) {
     const searchCrypto = cryptos.find(crypto => crypto.callsign == token);
     console.log(`Token encontrado 
@@ -99,30 +126,36 @@ function convertCrypto(token, value, option) {
     }
 }
 
+
+
+
 function updateCart(option, product, description, prodPrice) {
     let bullet = parseInt((document.getElementById("items-cart").innerText));
     let total = parseInt(document.getElementById("total").innerText);
+    let item0 = `item-${bullet}-delete`;
     let item1 = `item-${bullet}-product`;
     let item2 = `item-${bullet}-desc`;
     let item3 = `item-${bullet}-price`;
     if (bullet < 3) {
-            prod = document.getElementById(item1);
-            desc = document.getElementById(item2);
-            price = document.getElementById(item3);
-            prod.innerText = product;
-            desc.innerText = description;
-            price.innerText = `AR$ ${prodPrice}`;
-            document.getElementById("items-cart").innerText = bullet +1;
-            document.getElementById("total").innerText = total + prodPrice;
-            cartItems.push({ product, description, prodPrice });
-            sessionStorage.setItem("cart", JSON.stringify(cartItems));
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Transaccion agregada al carrito',
-                showConfirmButton: false,
-                timer: 1500
-            });
+        buttonDelete = document.getElementById(item0);
+        prod = document.getElementById(item1);
+        desc = document.getElementById(item2);
+        price = document.getElementById(item3);
+        prod.innerText = product;
+        desc.innerText = description;
+        price.innerText = `AR$ ${prodPrice}`;
+        buttonDelete.classList.remove("hidden");
+        document.getElementById("items-cart").innerText = bullet +1;
+        document.getElementById("total").innerText = total + prodPrice;
+        cartItems.push({ product, description, prodPrice });
+        sessionStorage.setItem("cart", JSON.stringify(cartItems));
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Transaccion agregada al carrito',
+            showConfirmButton: false,
+            timer: 1500
+        });
     }else {
         Swal.fire({
             position: 'center',
@@ -132,7 +165,24 @@ function updateCart(option, product, description, prodPrice) {
             timer: 1500
         });
     }
-    
+}
+
+function deleteItem(position) {
+    let bullet = parseInt((document.getElementById("items-cart").innerText));
+    let total = parseInt(document.getElementById("total").innerText);
+    let item1 = `item-${position}-product`;
+    let item2 = `item-${position}-desc`;
+    let item3 = `item-${position}-price`;
+    prod = document.getElementById(item1);
+    desc = document.getElementById(item2);
+    price = document.getElementById(item3); 
+    console.log(prod, desc, price);
+//     document.getElementById("items-cart").innerText = bullet -1;
+//     document.getElementById("total").innerText = total - prodPrice;
+
+//     prod.innerText = product;
+//     desc.innerText = description;
+//     price.innerText = `AR$ ${prodPrice}`;
 }
 
 function resetCrypto() {
@@ -165,9 +215,63 @@ function setOption(readAction) {
 }
 
 
+
+function defineCryptos() {
+    sessionStorage.clear();
+    const cryptoList = [
+      { "name": "Bitcoin", "symbol": "BTC", "price": 0, "binance": "BTCUSDT", "rank": 1 },
+      { "name": "Ethereum", "symbol": "ETH", "price": 0, "binance": "ETHUSDT", "rank": 2 },
+      { "name": "Tether USD", "symbol": "USDT", "price": 1, "binance": "USDT", "rank": 3 },
+      { "name": "USDC", "symbol": "USDC", "price": 0, "binance": "USDCUSDT", "rank": 4 },
+      { "name": "Binance Coin", "symbol": "BNB", "price": 0, "binance": "BNBUSDT", "rank": 5 },
+      { "name": "XRP  ", "symbol": "XRP", "price": 0, "binance": "XRPUSDT", "rank": 6 },
+      { "name": "Binance USD", "symbol": "BUSD", "price": 0, "binance": "BUSDUSDT", "rank": 7 },
+      { "name": "Cardano   ", "symbol": "ADA", "price": 0, "binance": "ADAUSDT", "rank": 8 },
+      { "name": "Solana", "symbol": "SOL", "price": 0, "binance": "SOLUSDT", "rank": 9 },
+      { "name": "Dogecoin", "symbol": "DOGE", "price": 0, "binance": "DOGEUSDT", "rank": 10 }
+    ];
+    sessionStorage.setItem("Cryptos", JSON.stringify(cryptoList));
+}
+  
+function printPrice(symbol, price) {
+    let binanceData = JSON.parse(sessionStorage.getItem("Cryptos"));
+    binanceData.filter(element => {
+        if (element.symbol === symbol) {
+        element.price = price;
+        }
+    })
+    sessionStorage.setItem("Cryptos", JSON.stringify(binanceData));
+}
+  
+function updateBinancePrices() {
+    let binanceData = JSON.parse(sessionStorage.getItem("Cryptos"));
+    console.log(binanceData);
+    for (let i = 0; i < binanceData.length; i++){
+        if (binanceData[i].symbol === 'USDT') {
+        printPrice(binanceData[i].symbol, 1);
+        } else {
+        let urlBinance = `https://api.binance.com/api/v3/ticker/price?symbol=${binanceData[i].binance}`;
+        fetch(urlBinance)
+            .then(response => response.json())
+            .then(data => {
+            let price = Number(data.price);
+            let symbol = binanceData[i].symbol;
+            printPrice(symbol, price);
+            })
+            .catch(error => console.log(error));
+        }
+    }
+}
+
+
 // Main Program
+// Se crea Array de Cryptos para Cotizacion actualizado desde Binance
+defineCryptos();
+updateBinancePrices();
+
 const cryptos = [];
 localStorage.clear();
+// Modulo futuro para implementar una wallet
 cryptos.push(new Crypto("USDT", "USD Theter", 1, 1000));
 cryptos.push(new Crypto("ADA", "Cardano Token", 0.45, 2000));
 cryptos.push(new Crypto("ETH", "Etherum Token", 1345, 200));
@@ -191,7 +295,7 @@ credentialValidate.addEventListener("click", (e) => {
     titlePage.classList.add("hidden");
     connector.classList.remove("svg-image-red");
     connector.classList.add("svg-image-green");
-});
+})
 
 cartAdd.addEventListener("click", (e) => {
     let cart = document.getElementById("cart");
@@ -205,44 +309,40 @@ cartAdd.addEventListener("click", (e) => {
     resetCrypto();
 })
 
-const buttonOpenTable = document.getElementById('openCryptoTable');
-buttonOpenTable.addEventListener("click", (e) => {
+document.getElementById('item-0-delete').addEventListener("click", (e) => {
+    deleteItem("0");
+})
+
+document.getElementById('item-1-delete').addEventListener("click", (e) => {
+    deleteItem("1");
+})
+
+document.getElementById('item-2-delete').addEventListener("click", (e) => {
+    deleteItem("2");
+})
+
+
+document.getElementById("openCryptoTable").addEventListener("click", (e) => {
   e.preventDefault();
-  fetch("./resources/crypto.json")
-    .then((response) => {
-      if (response.ok) {
-        response.json().then((json) => {
-          // console.log(json.data);
-          let coinsData = json.data.coins;
+  let coinsData = JSON.parse(sessionStorage.getItem("Cryptos"));
+  console.log(coinsData);
+  let cryptoCoin = '';
+  //For Loop Starts
+  // subscribeBinance();
+  for (let i = 0; i < coinsData.length; i++) {
+    cryptoCoin += "<tr>";
+    cryptoCoin += `<td> ${coinsData[i].rank} </td>`;
+    cryptoCoin += `<td> ${coinsData[i].name}</td>`;
+    cryptoCoin += `<td> ${coinsData[i].symbol}</td>`;
+    // cryptoCoin += `<td> $${Math.round(coin.price)} Billion</td>`;
+    cryptoCoin += `<td> ${coinsData[i].price}</td>`; "<tr>";
+    };
 
-          if (coinsData.length > 0) {
-            var cryptoCoin = "";
-          }
-          let counter = 0;
-          //For Loop Starts
-          // subscribeBinance();
-          for (const coin of coinsData) {
-            if (counter >= 10) {
-              break;
-            }
-            cryptoCoin += "<tr>";
-            cryptoCoin += `<td> ${coin.price} </td>`;
-            cryptoCoin += `<td> ${coin.rank}</td>`;
-            cryptoCoin += `<td> ${coin.name}</td>`;
-            // cryptoCoin += `<td> $${Math.round(coin.price)} Billion</td>`;
-            cryptoCoin += `<td> ${coin.symbol}</td>`; "<tr>";
-            counter++;
-          };
+  //For Loop Ends
+  document.getElementById("data").innerHTML = cryptoCoin;
+})
 
-          //For Loop Ends
-          document.getElementById("data").innerHTML = cryptoCoin;
-        });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
-
-
-
+document.getElementById('checkout').addEventListener("click", (e) => {
+    e.preventDefault();
+    connMercadoPago();
+})
