@@ -20,6 +20,7 @@ const ARSUSDT = (value, exrateUSD) => value * exrateUSD;
 const ARSADA = (value, exrateUSD) => (value * 0.45) * exrateUSD;
 const ARSETH = (value, exrateUSD) => (value * 1345) * exrateUSD;
 
+// Function Connect to Blockchain animation
 function connBlockchain() {
     let timerInterval
     Swal.fire({
@@ -45,6 +46,7 @@ function connBlockchain() {
     });
 }
 
+// Function Connect to MP animation
 function connMercadoPago() {
     let timerInterval
     Swal.fire({
@@ -72,6 +74,7 @@ function connMercadoPago() {
     })
 }
 
+// Function Crypto exchange
 function convertCrypto(token, value, option) {
     const searchCrypto = cryptos.find(crypto => crypto.callsign == token);
     console.log(`Token encontrado 
@@ -126,7 +129,7 @@ function convertCrypto(token, value, option) {
     }
 }
 
-
+// Function Update Cart
 function updateCart(option, product, description, prodPrice) {
     let bullet = parseInt((document.getElementById("items-cart").innerText));
     let total = parseInt(document.getElementById("total").innerText);
@@ -165,6 +168,7 @@ function updateCart(option, product, description, prodPrice) {
     }
 }
 
+// Function Delete item from cart
 function deleteItem(position) {
     let bullet = parseInt((document.getElementById("items-cart").innerText));
     let total = parseInt(document.getElementById("total").innerText);
@@ -194,6 +198,7 @@ function deleteItem(position) {
     console.log("Item borrado: ", cart);
 }
 
+// Function reset buy/sell form values
 function resetCrypto() {
     let origin = document.getElementById("cryptoOrigin");
     let target = document.getElementById("cryptoTarget");
@@ -205,6 +210,7 @@ function resetCrypto() {
     action.selectedIndex = 0;
 }
 
+// Function read values from buy/sell form
 function setOption(readAction) {
     let origin = document.getElementById("cryptoOrigin").value;
     let target = document.getElementById("cryptoTarget").value;
@@ -223,7 +229,7 @@ function setOption(readAction) {
     }
 }
 
-
+// Function Define list of crypto and store in sessionStorage
 function defineCryptos() {
     sessionStorage.clear();
     const cryptoList = [
@@ -240,7 +246,8 @@ function defineCryptos() {
     ];
     sessionStorage.setItem("Cryptos", JSON.stringify(cryptoList));
 }
-  
+
+// Function update price of 1 crypto and save on sessionStorage
 function printPrice(symbol, price) {
     let binanceData = JSON.parse(sessionStorage.getItem("Cryptos"));
     binanceData.filter(element => {
@@ -250,7 +257,8 @@ function printPrice(symbol, price) {
     })
     sessionStorage.setItem("Cryptos", JSON.stringify(binanceData));
 }
-  
+
+// Function fetch from Binance the price for each crypto
 function updateBinancePrices() {
     let binanceData = JSON.parse(sessionStorage.getItem("Cryptos"));
     console.log(binanceData);
@@ -336,7 +344,6 @@ document.getElementById("openCryptoTable").addEventListener("click", (e) => {
   console.log(coinsData);
   let cryptoCoin = '';
   //For Loop Starts
-  // subscribeBinance();
   for (let i = 0; i < coinsData.length; i++) {
     cryptoCoin += "<tr>";
     cryptoCoin += `<td> ${coinsData[i].rank} </td>`;
@@ -345,7 +352,6 @@ document.getElementById("openCryptoTable").addEventListener("click", (e) => {
     // cryptoCoin += `<td> $${Math.round(coin.price)} Billion</td>`;
     cryptoCoin += `<td> ${coinsData[i].price}</td>`; "<tr>";
     };
-
   //For Loop Ends
   document.getElementById("data").innerHTML = cryptoCoin;
 })
