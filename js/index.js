@@ -127,8 +127,6 @@ function convertCrypto(token, value, option) {
 }
 
 
-
-
 function updateCart(option, product, description, prodPrice) {
     let bullet = parseInt((document.getElementById("items-cart").innerText));
     let total = parseInt(document.getElementById("total").innerText);
@@ -170,19 +168,30 @@ function updateCart(option, product, description, prodPrice) {
 function deleteItem(position) {
     let bullet = parseInt((document.getElementById("items-cart").innerText));
     let total = parseInt(document.getElementById("total").innerText);
+    let cart = JSON.parse(sessionStorage.getItem("cart"));
+    let item0 = `item-${position}-delete`;
     let item1 = `item-${position}-product`;
     let item2 = `item-${position}-desc`;
     let item3 = `item-${position}-price`;
-    prod = document.getElementById(item1);
-    desc = document.getElementById(item2);
-    price = document.getElementById(item3); 
-    console.log(prod, desc, price);
-//     document.getElementById("items-cart").innerText = bullet -1;
-//     document.getElementById("total").innerText = total - prodPrice;
-
-//     prod.innerText = product;
-//     desc.innerText = description;
-//     price.innerText = `AR$ ${prodPrice}`;
+    console.log("carrito: ", cart);
+    console.log("array lenght: ", cart.length);
+    let index = parseInt(position);
+    console.log("Index", index);
+    if (index > -1) {
+        buttonDelete = document.getElementById(item0);
+        prod = document.getElementById(item1);
+        desc = document.getElementById(item2);
+        price = document.getElementById(item3);
+        buttonDelete.classList.add("hidden");
+        document.getElementById("items-cart").innerText = bullet - 1;
+        document.getElementById("total").innerText = total + parseInt(cart[position].price);
+        prod.innerText = '';
+        desc.innerText = '';
+        price.innerText = '';
+        cart.splice(index, 1);
+    }
+    sessionStorage.setItem("cart", JSON.stringify(cart));
+    console.log("Item borrado: ", cart);
 }
 
 function resetCrypto() {
@@ -213,7 +222,6 @@ function setOption(readAction) {
         updateCart(readAction, product, description, convertion);
     }
 }
-
 
 
 function defineCryptos() {
