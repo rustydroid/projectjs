@@ -244,6 +244,10 @@ function defineCryptos() {
       { "name": "Solana", "symbol": "SOL", "price": 0, "binance": "SOLUSDT", "rank": 9 },
       { "name": "Dogecoin", "symbol": "DOGE", "price": 0, "binance": "DOGEUSDT", "rank": 10 }
     ];
+    // fetch('../resources/crypto.json')
+    //     .then((response) => response.json())
+    //     .then((data) => console.log(data))
+    //     .catch((error) => console.log(error));
     sessionStorage.setItem("Cryptos", JSON.stringify(cryptoList));
 }
 
