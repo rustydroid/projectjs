@@ -1,7 +1,6 @@
 //Const definition
 const exrateBuyUSD = 278;
 const exrateSellUSD = 272;
-let cartItems = [];
 
 // Object definition
 class Crypto{
@@ -131,6 +130,7 @@ function convertCrypto(token, value, option) {
 
 // Function Update Cart
 function updateCart(option, product, description, prodPrice) {
+    let cartItems = [];
     let bullet = parseInt((document.getElementById("items-cart").innerText));
     let total = parseInt(document.getElementById("total").innerText);
     let item0 = `item-${bullet}-delete`;
@@ -148,8 +148,14 @@ function updateCart(option, product, description, prodPrice) {
         buttonDelete.classList.remove("hidden");
         document.getElementById("items-cart").innerText = bullet +1;
         document.getElementById("total").innerText = total + prodPrice;
+        // if (localStorage.getItem("cart")) {
+        //     console.log("Existe carrito");
+        // } else {
+        //     console.log("NO Existe Carrito")
+        // }
         cartItems.push({ product, description, prodPrice });
-        sessionStorage.setItem("cart", JSON.stringify(cartItems));
+        console.log("carrito actualizado", cartItems);
+        localStorage.setItem("cart", JSON.stringify(cartItems));
         Swal.fire({
             position: 'center',
             icon: 'success',
@@ -172,15 +178,15 @@ function updateCart(option, product, description, prodPrice) {
 function deleteItem(position) {
     let bullet = parseInt((document.getElementById("items-cart").innerText));
     let total = parseInt(document.getElementById("total").innerText);
-    let cart = JSON.parse(sessionStorage.getItem("cart"));
+    let cart = JSON.parse(localStorage.getItem("cart"));
+    localStorage.removeItem("cart");
     let item0 = `item-${position}-delete`;
     let item1 = `item-${position}-product`;
     let item2 = `item-${position}-desc`;
     let item3 = `item-${position}-price`;
-    console.log("carrito: ", cart);
-    console.log("array lenght: ", cart.length);
+    console.log("carrito actual: ", cart);
+    console.log("index a borrar", position);
     let index = parseInt(position);
-    console.log("Index", index);
     if (index > -1) {
         buttonDelete = document.getElementById(item0);
         prod = document.getElementById(item1);
@@ -188,14 +194,17 @@ function deleteItem(position) {
         price = document.getElementById(item3);
         buttonDelete.classList.add("hidden");
         document.getElementById("items-cart").innerText = bullet - 1;
-        document.getElementById("total").innerText = total + parseInt(cart[position].price);
+        document.getElementById("total").innerText = total - parseInt(cart[position].prodPrice);
+        console.log("total: ", total);
+        console.log("item: ", cart[position].prodPrice);
+        console.log("Carrito Total: ", total - parseInt(cart[position].prodPrice));
         prod.innerText = '';
         desc.innerText = '';
         price.innerText = '';
         cart.splice(index, 1);
+        console.log("Carrito spliced", cart);
+        localStorage.setItem("cart", JSON.stringify(cart));
     }
-    sessionStorage.setItem("cart", JSON.stringify(cart));
-    console.log("Item borrado: ", cart);
 }
 
 // Function reset buy/sell form values
@@ -232,23 +241,13 @@ function setOption(readAction) {
 // Function Define list of crypto and store in sessionStorage
 function defineCryptos() {
     sessionStorage.clear();
-    const cryptoList = [
-      { "name": "Bitcoin", "symbol": "BTC", "price": 0, "binance": "BTCUSDT", "rank": 1 },
-      { "name": "Ethereum", "symbol": "ETH", "price": 0, "binance": "ETHUSDT", "rank": 2 },
-      { "name": "Tether USD", "symbol": "USDT", "price": 1, "binance": "USDT", "rank": 3 },
-      { "name": "USDC", "symbol": "USDC", "price": 0, "binance": "USDCUSDT", "rank": 4 },
-      { "name": "Binance Coin", "symbol": "BNB", "price": 0, "binance": "BNBUSDT", "rank": 5 },
-      { "name": "XRP  ", "symbol": "XRP", "price": 0, "binance": "XRPUSDT", "rank": 6 },
-      { "name": "Binance USD", "symbol": "BUSD", "price": 0, "binance": "BUSDUSDT", "rank": 7 },
-      { "name": "Cardano   ", "symbol": "ADA", "price": 0, "binance": "ADAUSDT", "rank": 8 },
-      { "name": "Solana", "symbol": "SOL", "price": 0, "binance": "SOLUSDT", "rank": 9 },
-      { "name": "Dogecoin", "symbol": "DOGE", "price": 0, "binance": "DOGEUSDT", "rank": 10 }
-    ];
-    // fetch('../resources/crypto.json')
-    //     .then((response) => response.json())
-    //     .then((data) => console.log(data))
-    //     .catch((error) => console.log(error));
-    sessionStorage.setItem("Cryptos", JSON.stringify(cryptoList));
+    fetch('https://raw.githubusercontent.com/rustydroid/projectjs/41d59c624cf579fc5a9fb09070bc633b8e3bfc95/resources/crypto.json')
+    .then((response) => response.json())
+    .then((data) => {
+        sessionStorage.setItem("Cryptos", JSON.stringify(data));
+        updateBinancePrices();
+    })
+    .catch((error) => console.log(error));
 }
 
 // Function update price of 1 crypto and save on sessionStorage
@@ -265,7 +264,6 @@ function printPrice(symbol, price) {
 // Function fetch from Binance the price for each crypto
 function updateBinancePrices() {
     let binanceData = JSON.parse(sessionStorage.getItem("Cryptos"));
-    console.log(binanceData);
     for (let i = 0; i < binanceData.length; i++){
         if (binanceData[i].symbol === 'USDT') {
         printPrice(binanceData[i].symbol, 1);
@@ -287,8 +285,6 @@ function updateBinancePrices() {
 // Main Program
 // Se crea Array de Cryptos para Cotizacion actualizado desde Binance
 defineCryptos();
-updateBinancePrices();
-
 const cryptos = [];
 localStorage.clear();
 // Modulo futuro para implementar una wallet
@@ -343,21 +339,21 @@ document.getElementById('item-2-delete').addEventListener("click", (e) => {
 
 
 document.getElementById("openCryptoTable").addEventListener("click", (e) => {
-  e.preventDefault();
-  let coinsData = JSON.parse(sessionStorage.getItem("Cryptos"));
-  console.log(coinsData);
-  let cryptoCoin = '';
-  //For Loop Starts
-  for (let i = 0; i < coinsData.length; i++) {
-    cryptoCoin += "<tr>";
-    cryptoCoin += `<td> ${coinsData[i].rank} </td>`;
-    cryptoCoin += `<td> ${coinsData[i].name}</td>`;
-    cryptoCoin += `<td> ${coinsData[i].symbol}</td>`;
-    // cryptoCoin += `<td> $${Math.round(coin.price)} Billion</td>`;
-    cryptoCoin += `<td> ${coinsData[i].price}</td>`; "<tr>";
-    };
-  //For Loop Ends
-  document.getElementById("data").innerHTML = cryptoCoin;
+    updateBinancePrices();
+    e.preventDefault();
+    let coinsData = JSON.parse(sessionStorage.getItem("Cryptos"));
+    let cryptoCoin = '';
+    //For Loop Starts
+    for (let i = 0; i < coinsData.length; i++) {
+        cryptoCoin += "<tr>";
+        cryptoCoin += `<td> ${coinsData[i].rank} </td>`;
+        cryptoCoin += `<td> ${coinsData[i].name}</td>`;
+        cryptoCoin += `<td> ${coinsData[i].symbol}</td>`;
+        // cryptoCoin += `<td> $${Math.round(coin.price)} Billion</td>`;
+        cryptoCoin += `<td> ${coinsData[i].price}</td>`; "<tr>";
+        };
+    //For Loop Ends
+    document.getElementById("data").innerHTML = cryptoCoin;
 })
 
 document.getElementById('checkout').addEventListener("click", (e) => {
