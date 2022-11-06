@@ -1,6 +1,6 @@
 //Const definition
-const exrateBuyUSD = 278;
-const exrateSellUSD = 272;
+const exrateBuyUSD = 295;
+const exrateSellUSD = 292;
 
 // Object definition
 class Crypto{
@@ -128,6 +128,7 @@ function convertCrypto(token, value, option) {
     }
 }
 
+// Function create item
 function createItem(position) {
     console.log("creating element: ", position);
     // item ids creation
@@ -169,6 +170,7 @@ function createItem(position) {
     ul.appendChild(li);
 }
 
+// Function Update item
 function updateItem(position, product, description, prodPrice) {
     console.log("updating element: ", position, product, description, prodPrice);
     let productItemId = `item-${position}-product`;
@@ -247,9 +249,6 @@ function deleteItem(position) {
         localStorage.setItem("cart", JSON.stringify(cart));
     }
 }
-
-
-
 
 // Function reset buy/sell form values
 function resetCrypto() {
@@ -361,7 +360,6 @@ credentialValidate.addEventListener("click", (e) => {
 })
 
 cartAdd.addEventListener("click", (e) => {
-    // e.preventDefault();
     let cart = document.getElementById("cart");
     let paymentForm = document.getElementById("form2");
     let cartList = document.getElementById("cartList");
@@ -374,22 +372,6 @@ cartAdd.addEventListener("click", (e) => {
     action === "buy" ? setOption("buy") : setOption("sell");
     resetCrypto();
 })
-
-// document.getElementById('item-0-delete').addEventListener("click", (e) => {
-//     // deleteItem("0");
-//     let ul = document.getElementById('cartList');
-//     while (ul.firstChild) {
-//         ul.removeChild(ul.firstChild);
-//     }
-// })
-
-// document.getElementById('item-1-delete').addEventListener("click", (e) => {
-//     deleteItem("1");
-// })
-
-// document.getElementById('item-2-delete').addEventListener("click", (e) => {
-//     deleteItem("2");
-// })
 
 
 document.getElementById("openCryptoTable").addEventListener("click", (e) => {
