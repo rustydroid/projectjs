@@ -128,34 +128,70 @@ function convertCrypto(token, value, option) {
     }
 }
 
+function createItem(position) {
+    console.log("creating element: ", position);
+    // item ids creation
+    let deleteItemId = `item-${position}-delete`;
+    let productItemId = `item-${position}-product`;
+    let descItemId = `item-${position}-desc`;
+    let priceItemId = `item-${position}-price`;
+    let positionItemId = `item-${position}`;
+    let callDeleteAction = `deleteItem(${position})`;
+    // li creacion
+    let ul = document.getElementById("cartList")
+    let li = document.createElement("li");
+    li.classList.add("list-group-item", "d-flex", "justify-content-between", "lh-sm", "items");
+    li.setAttribute('id', positionItemId);
+    // div containing Item product, description
+    let div = document.createElement("div");
+    div.classList.add("container");
+    let h6 = document.createElement("h6");
+    h6.setAttribute('id', productItemId);
+    h6.classList.add("my-0");
+    let small = document.createElement("small");
+    small.setAttribute('id', descItemId);
+    small.classList.add("text-muted");
+    let button = document.createElement("button");
+    button.classList.add("btn", "btn-danger");
+    button.setAttribute('type', 'button');
+    button.setAttribute('id', deleteItemId);
+    button.setAttribute('onclick', callDeleteAction);
+    button.innerText = "x"
+    // span containing item price
+    let span = document.createElement("span");
+    span.setAttribute('id', priceItemId);
+    // Appending item to "ul" element
+    div.appendChild(h6);
+    div.appendChild(small);
+    div.appendChild(button);
+    li.appendChild(div);
+    li.appendChild(span);
+    ul.appendChild(li);
+}
+
+function updateItem(position, product, description, prodPrice) {
+    console.log("updating element: ", position, product, description, prodPrice);
+    let productItemId = `item-${position}-product`;
+    let descItemId = `item-${position}-desc`;
+    let priceItemId = `item-${position}-price`;
+    document.getElementById(productItemId).innerText = product;
+    document.getElementById(descItemId).innerText = description;
+    document.getElementById(priceItemId).innerText = `AR$ ${prodPrice}`;
+}
+
 // Function Update Cart
-function updateCart(option, product, description, prodPrice) {
-    let cartItems = [];
+function updateCart(product, description, prodPrice) {
+    let cartItems = JSON.parse(localStorage.getItem('cart'));
     let bullet = parseInt((document.getElementById("items-cart").innerText));
     let total = parseInt(document.getElementById("total").innerText);
-    let item0 = `item-${bullet}-delete`;
-    let item1 = `item-${bullet}-product`;
-    let item2 = `item-${bullet}-desc`;
-    let item3 = `item-${bullet}-price`;
     if (bullet < 3) {
-        buttonDelete = document.getElementById(item0);
-        prod = document.getElementById(item1);
-        desc = document.getElementById(item2);
-        price = document.getElementById(item3);
-        prod.innerText = product;
-        desc.innerText = description;
-        price.innerText = `AR$ ${prodPrice}`;
-        buttonDelete.classList.remove("hidden");
-        document.getElementById("items-cart").innerText = bullet +1;
-        document.getElementById("total").innerText = total + prodPrice;
-        // if (localStorage.getItem("cart")) {
-        //     console.log("Existe carrito");
-        // } else {
-        //     console.log("NO Existe Carrito")
-        // }
+        createItem(bullet);
+        updateItem(bullet, product, description, prodPrice);
         cartItems.push({ product, description, prodPrice });
-        console.log("carrito actualizado", cartItems);
         localStorage.setItem("cart", JSON.stringify(cartItems));
+        document.getElementById("items-cart").innerText = cartItems.length;
+        document.getElementById("total").innerText = total + prodPrice;
+        console.log("carrito actualizado", cartItems);
         Swal.fire({
             position: 'center',
             icon: 'success',
@@ -176,36 +212,44 @@ function updateCart(option, product, description, prodPrice) {
 
 // Function Delete item from cart
 function deleteItem(position) {
-    let bullet = parseInt((document.getElementById("items-cart").innerText));
-    let total = parseInt(document.getElementById("total").innerText);
+    console.log("posicion a borrar: ", position);
+    let cartList = document.getElementById("cartList");
     let cart = JSON.parse(localStorage.getItem("cart"));
-    localStorage.removeItem("cart");
-    let item0 = `item-${position}-delete`;
-    let item1 = `item-${position}-product`;
-    let item2 = `item-${position}-desc`;
-    let item3 = `item-${position}-price`;
-    console.log("carrito actual: ", cart);
-    console.log("index a borrar", position);
-    let index = parseInt(position);
-    if (index > -1) {
-        buttonDelete = document.getElementById(item0);
-        prod = document.getElementById(item1);
-        desc = document.getElementById(item2);
-        price = document.getElementById(item3);
-        buttonDelete.classList.add("hidden");
-        document.getElementById("items-cart").innerText = bullet - 1;
-        document.getElementById("total").innerText = total - parseInt(cart[position].prodPrice);
-        console.log("total: ", total);
-        console.log("item: ", cart[position].prodPrice);
-        console.log("Carrito Total: ", total - parseInt(cart[position].prodPrice));
-        prod.innerText = '';
-        desc.innerText = '';
-        price.innerText = '';
-        cart.splice(index, 1);
-        console.log("Carrito spliced", cart);
+    cart.splice(position, 1);
+    console.log("carrito spliced: ", cart);
+    console.log("carrito size: ", cart.length);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    let subTotal = 0;
+    if ((cart.length) !== 0) {
+        console.log("elementos carrito: ", cart.length);
+        while (cartList.firstChild) {
+            console.log("borrando lista");
+            cartList.removeChild(cartList.firstChild);
+        };
+        for (let i = 0; i < (cart.length); i++) {
+            console.log("recreando lista");
+            createItem(i);
+            console.log("datos a popular: ", i, cart[i].product, cart[i].description, cart[i].prodPrice);
+            updateItem(i, cart[i].product, cart[i].description, cart[i].prodPrice);
+            subTotal = subTotal + Number(cart[i].prodPrice);
+            console.log(`item ${i} creado`);
+        };
+        document.getElementById("total").innerText = subTotal;
+        document.getElementById("items-cart").innerText = cart.length;
+        console.log("guardando datos localStorage");
+
+    } else {
+        while (cartList.firstChild) {
+            cartList.removeChild(cartList.firstChild);
+        };
+        document.getElementById("total").innerText = 0;
+        document.getElementById("items-cart").innerText = cart.length;
         localStorage.setItem("cart", JSON.stringify(cart));
     }
 }
+
+
+
 
 // Function reset buy/sell form values
 function resetCrypto() {
@@ -221,6 +265,7 @@ function resetCrypto() {
 
 // Function read values from buy/sell form
 function setOption(readAction) {
+    console.log("Entrando en setOption");
     let origin = document.getElementById("cryptoOrigin").value;
     let target = document.getElementById("cryptoTarget").value;
     let value = parseInt(document.getElementById("amount").value);
@@ -228,13 +273,13 @@ function setOption(readAction) {
     if (readAction === "buy") {
         product = `Compra ${origin} ${target}`;
         description = `Exchange rate: $${exrateBuyUSD}`;
-        updateCart(readAction, product, description, convertion);
+        updateCart(product, description, convertion);
 
     } else if (readAction === "sell") {
         product = `Venta ${origin} ${target}`;
         description = `Exchange rate: $${exrateBuyUSD}`;
         console.log()
-        updateCart(readAction, product, description, convertion);
+        updateCart(product, description, convertion);
     }
 }
 
@@ -286,7 +331,9 @@ function updateBinancePrices() {
 // Se crea Array de Cryptos para Cotizacion actualizado desde Binance
 defineCryptos();
 const cryptos = [];
+const cart = [];
 localStorage.clear();
+localStorage.setItem('cart', JSON.stringify(cart));
 // Modulo futuro para implementar una wallet
 cryptos.push(new Crypto("USDT", "USD Theter", 1, 1000));
 cryptos.push(new Crypto("ADA", "Cardano Token", 0.45, 2000));
@@ -314,28 +361,35 @@ credentialValidate.addEventListener("click", (e) => {
 })
 
 cartAdd.addEventListener("click", (e) => {
+    // e.preventDefault();
     let cart = document.getElementById("cart");
     let paymentForm = document.getElementById("form2");
     let cartList = document.getElementById("cartList");
+    let totalItems = document.getElementById("total-items");
     cart.classList.remove("hidden");
     paymentForm.classList.remove("hidden");
     cartList.classList.remove("hidden");
+    totalItems.classList.remove("hidden");
     let action = document.getElementById("actionReq").value;
     action === "buy" ? setOption("buy") : setOption("sell");
     resetCrypto();
 })
 
-document.getElementById('item-0-delete').addEventListener("click", (e) => {
-    deleteItem("0");
-})
+// document.getElementById('item-0-delete').addEventListener("click", (e) => {
+//     // deleteItem("0");
+//     let ul = document.getElementById('cartList');
+//     while (ul.firstChild) {
+//         ul.removeChild(ul.firstChild);
+//     }
+// })
 
-document.getElementById('item-1-delete').addEventListener("click", (e) => {
-    deleteItem("1");
-})
+// document.getElementById('item-1-delete').addEventListener("click", (e) => {
+//     deleteItem("1");
+// })
 
-document.getElementById('item-2-delete').addEventListener("click", (e) => {
-    deleteItem("2");
-})
+// document.getElementById('item-2-delete').addEventListener("click", (e) => {
+//     deleteItem("2");
+// })
 
 
 document.getElementById("openCryptoTable").addEventListener("click", (e) => {
